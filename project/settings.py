@@ -3,7 +3,22 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# =======================
+# 🔥 PRODUCTION FIX (ADD ONLY)
+# =======================
 
+# Session fix (VERY IMPORTANT)
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Secure cookies (Render HTTPS)
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Fix proxy (Render uses HTTPS internally)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Optional but recommended
+CSRF_TRUSTED_ORIGINS = ['https://mail-checking-repo.onrender.com']
 # =======================
 # 🔐 SECURITY SETTINGS
 # =======================
