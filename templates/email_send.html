@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Email Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #0c0c1a, #1a1a2e, #16213e, #0f0f23);
+            background-size: 400% 400%;
+            animation: gradientShift 16s ease infinite;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+
+        
+        .bg-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            animation: float 25s infinite linear;
+        }
+
+        .bg-circle:nth-child(1) { width: 200px; height: 200px; top: 10%; left: 10%; animation-delay: 0s; }
+        .bg-circle:nth-child(2) { width: 150px; height: 150px; top: 60%; right: 10%; animation-delay: -10s; }
+        .bg-circle:nth-child(3) { width: 100px; height: 100px; bottom: 20%; left: 20%; animation-delay: -5s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-30px) rotate(360deg); }
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            padding: 60px 50px;
+            border-radius: 32px;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.7s;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 50px 80px -12px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-icon {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 10px 20px rgba(102, 126, 234, 0.3));
+            animation: iconFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #e2e8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
+        }
+
+        .subtitle {
+            color: rgba(236, 236, 241, 0.9);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .email-input {
+            width: 100%;
+            padding: 22px 28px 22px 80px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            outline: none;
+            font-size: 17px;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            color: #fcfbfb;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            height: 76px;
+            font-family: inherit;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 400;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 32px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.6);
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .email-input:focus {
+            border-color: rgba(102, 126, 234, 0.8);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2), 0 24px 48px rgba(102, 126, 234, 0.15);
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .email-input:focus + .input-icon {
+            color: #667eea;
+            transform: translateY(-50%) scale(1.15);
+        }
+
+        .email-input.invalid {
+            border-color: rgba(245, 87, 108, 0.8);
+            box-shadow: 0 0 0 4px rgba(245, 87, 108, 0.2);
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 24px;
+            border: none;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            box-shadow: 0 16px 40px rgba(102, 126, 234, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            height: 76px;
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.7s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 28px 56px rgba(102, 126, 234, 0.5);
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:active {
+            transform: translateY(-3px);
+        }
+
+        .cta-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: #f5576c;
+            font-size: 0.95rem;
+            margin-top: 12px;
+            display: none;
+            background: rgba(245, 87, 108, 0.1);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border-left: 4px solid #f5576c;
+            backdrop-filter: blur(10px);
+        }
+
+        .error-message.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 48px 32px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 2.1rem;
+            }
+            
+            .email-input, .cta-button {
+                height: 68px;
+                padding: 20px 24px 20px 72px;
+            }
+            
+            .input-icon {
+                left: 28px;
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .glass-card {
+                padding: 40px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-elements">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
+    {% if error %}
+    <div class="error-message show">{{ error }}</div>
+    {% endif %}
+
+    <div class="main-container">
+        <div class="glass-card">
+            <div class="hero-icon">
+                <i class="fas fa-envelope-open-text"></i>
+            </div>
+            <h1 class="title">Verify Email</h1>
+            <p class="subtitle">Enter your email address to receive a 6-digit verification code</p>
+
+            <form method="POST" id="emailForm">
+                {% csrf_token %}
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <input type="email" name="email" id="email" class="email-input" 
+                               placeholder="eg:your.email@company.com" required autocomplete="email">
+                        <i class="fas fa-envelope input-icon"></i>
+                    </div>
+                    <div class="error-message" id="errorMsg"></div>
+                </div>
+                <button type="submit" class="cta-button" id="sendBtn">
+                    <span id="btn-text">Send Verification Code</span>
+                    <span id="btn-loading" class="loading-spinner" style="display: none;"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        
+        const emailForm = document.getElementById('emailForm');
+        const emailInput = document.getElementById('email');
+        const sendBtn = document.getElementById('sendBtn');
+        const btnText = document.getElementById('btn-text');
+        const btnLoading = document.getElementById('btn-loading');
+        const errorMsg = document.getElementById('errorMsg');
+
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        emailInput.addEventListener('input', function(e) {
+            const email = e.target.value.trim();
+            const isValid = emailRegex.test(email);
+            
+            if (email && !isValid) {
+                e.target.classList.add('invalid');
+                showError('Please enter a valid email address');
+            } else {
+                e.target.classList.remove('invalid');
+                hideError();
+            }
+        });
+
+       
+        emailForm.addEventListener('submit', function(e) {
+            const email = emailInput.value.trim();
+            
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                emailInput.classList.add('invalid');
+                showError('Please enter a valid email address');
+                return false;
+            }
+
+            
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            sendBtn.disabled = true;
+            emailInput.blur();
+        });
+
+        function showError(message) {
+            errorMsg.textContent = message;
+            errorMsg.classList.add('show');
+        }
+
+        function hideError() {
+            errorMsg.classList.remove('show');
+            errorMsg.textContent = '';
+        }
+
+        
+        window.addEventListener('load', function() {
+            emailInput.focus();
+            
+            
+            emailInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && emailRegex.test(emailInput.value.trim())) {
+                    emailForm.submit();
+                }
+            });
+        });
+
+        if (!document.querySelector('.error-message.show')) {
+            hideError();
+        }
+    </script>
+</body>
+</html>
