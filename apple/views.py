@@ -99,7 +99,7 @@ def send_modern_email(email, otp):
 
     try:
         msg = EmailMultiAlternatives(subject, text_content, from_email, [email])
-        msg.send(fail_silently=True)  # 🔥 prevents crash
+        msg.send(fail_silently=False)
         print("Email sent")
     except Exception as e:
         print("Email failed:", e)
