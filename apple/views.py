@@ -98,7 +98,7 @@ def send_modern_email(email, otp):
     text_content = f"Your OTP is {otp}"
 
     try:
-        msg = EmailMultiAlternatives(subject, text_content, from_email, [email])
+        msg = EmailMultiAlternatives(subject,text_content,settings.DEFAULT_FROM_EMAIL,[email])
         msg.send(fail_silently=False)
         print("Email sent")
     except Exception as e:
