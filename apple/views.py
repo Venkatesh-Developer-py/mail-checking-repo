@@ -91,15 +91,21 @@ def resend_otp(request):
     return redirect('verify')
 
 
-def send_modern_email(email, otp):
-    subject = "Your OTP Code"
-    from_email = settings.EMAIL_HOST_USER
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
-    text_content = f"Your OTP is {otp}"
+def send_modern_email(email, otp):
+    message = Mail(
+        from_email=os.environ.get("EMAIL_HOST_USER"),
+        to_emails=email,
+        subject="Your OTP Code",
+        html_content=f"<strong>Your OTP is {otp}</strong>"
+    )
 
     try:
-        msg = EmailMultiAlternatives(subject,text_content,settings.DEFAULT_FROM_EMAIL,[email])
-        msg.send(fail_silently=False)
-        print("Email sent")
+        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        sg.send(message)
+        print("✅ Email sent via SendGrid")
     except Exception as e:
-        print("Email failed:", e)
+        print("❌ Email failed:", str(e))
